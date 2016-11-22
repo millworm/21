@@ -6,7 +6,8 @@ import random
 
 class Example(QMainWindow):
     def __init__(self):
-        self.koloda = [6, 7, 8, 9, 10, 2, 3, 4, 11] * 4
+		self.masti = ["♥", "♦", "♣", "♠"]
+        self.koloda = self.Koloda()
         self.count1 = 0
         self.count2 = 0
         self.numc1 = 0
@@ -18,6 +19,18 @@ class Example(QMainWindow):
 
         self.initUI()
 
+	#Раскидать колоду
+	def Koloda(self):
+        i = 2
+        temp = []
+        while i < 12:
+            if i == 5:
+                i += 1
+                continue
+            for m in self.masti:
+                temp.append([i, m])
+            i += 1
+        return temp
 
     def initUI(self):
         ## Кнопка СТАРТ
@@ -212,8 +225,6 @@ class Example(QMainWindow):
         # self.statusBar().showMessage(sender.text() + ' was pressed')
         self.btnStart.hide()
         self.Visible()  # показываем скрытое
-        # выдаем по карте
-        # self.buttonClicked_Card()
 
     def Visible(self):
         self.Score.show()  # поле очков
@@ -225,15 +236,14 @@ class Example(QMainWindow):
         self.Score2.show()  # очки противника
         self.btnStop.show()  # кнопка стоп
         self.btnRestart.show()
-        # self.Cards1.show()
-        # self.lcards_1.show()
         self.Cards2.show()
         self.lcards_2.show()
 
     def buttonClicked_Card(self):
         if self.loose == True:
             return
-        current = self.koloda.pop()
+        card = self.koloda.pop()
+        current = card[0]
         if current < 6 or current == 11:
             text = "<html><center>"
             text += self.tbCards.toPlainText()
@@ -247,12 +257,12 @@ class Example(QMainWindow):
                 text = text + "A"
             self.count1 += current
             self.Score.setText(str(self.count1))
-            text = text + " " + "</center></html>"
+            text = text + card[1] + " " + "</center></html>"
             self.tbCards.setText(text)
         else:
             text = "<html><center>"
             text += self.tbCards.toPlainText()
-            self.tbCards.setText(text + str(current)  + " " + "</center></html>")
+            self.tbCards.setText(text + str(current)+ card[1]  + " " + "</center></html>")
             self.count1 += current
             self.Score.setText(str(self.count1))
 
@@ -298,7 +308,7 @@ class Example(QMainWindow):
         self.count2 = 0
         self.numc2 = 0
         if len(self.koloda) < 10:
-            self.koloda = self.koloda = [6, 7, 8, 9, 10, 2, 3, 4, 11] * 4
+            self.koloda = self.Koloda()
         random.shuffle(self.koloda)
         self.loose = False
 
@@ -309,17 +319,20 @@ class Example(QMainWindow):
         while S:
             i += 1
             if self.count2 <= 15:
-                current = self.koloda.pop()
+                card = self.koloda.pop()
+                current = card[0]
                 self.numc2 += 1
                 self.count2 += current
             elif self.count2 > 15 and self.count2 <= 18:
-                current = self.koloda.pop()
+                card = self.koloda.pop()
+                current = card[0]
                 self.numc2 += 1
                 self.count2 += current
             elif self.count2 > 18 and self.count2 <= 20:
                 r = random.random()
                 if r > 0.65:
-                    current = self.koloda.pop()
+                    card = self.koloda.pop()
+					current = card[0]
                     self.numc2 += 1
                     self.count2 += current
                 S = False
