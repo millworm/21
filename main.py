@@ -257,12 +257,12 @@ class Example(QMainWindow):
                 text = text + "A"
             self.count1 += current
             self.Score.setText(str(self.count1))
-            text = text + card[1] + " " + "</center></html>"
+            text = self.Color(text + card[1]) + " " + "</center></html>"
             self.tbCards.setText(text)
         else:
             text = "<html><center>"
             text += self.tbCards.toPlainText()
-            self.tbCards.setText(text + str(current)+ card[1]  + " " + "</center></html>")
+            self.tbCards.setText(self.Color(text + str(current) + card[1]) + " " + "</center></html>")
             self.count1 += current
             self.Score.setText(str(self.count1))
 
@@ -273,7 +273,12 @@ class Example(QMainWindow):
         if self.count1 != 0:
             self.II(False)
 
-
+    # Цвета масти
+    def Color(self, str):
+        temp = str.replace("♥", "<span style=\"color:#ff0000;\" >♥</span>")
+        temp = temp.replace("♦", "<span style=\"color:#ff0000;\" >♦</span>")
+        return temp
+		
     def buttonClicked_Stop(self):
         if self.count1 == 0 or self.loose == True:
             return
