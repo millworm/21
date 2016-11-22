@@ -6,21 +6,24 @@ import random
 
 class Example(QMainWindow):
     def __init__(self):
-		self.masti = ["♥", "♦", "♣", "♠"]
+        self.masti = ["♥", "♦", "♣", "♠"]
         self.koloda = self.Koloda()
         self.count1 = 0
         self.count2 = 0
         self.numc1 = 0
         self.numc2 = 0
         self.loose = False
+        self.wins=0
+        self.draws=0
+        self.loses=0
         random.shuffle(self.koloda)
 
         super().__init__()
 
         self.initUI()
 
-	#Раскидать колоду
-	def Koloda(self):
+    #Обновить колоду
+    def Koloda(self):
         i = 2
         temp = []
         while i < 12:
@@ -33,6 +36,7 @@ class Example(QMainWindow):
         return temp
 
     def initUI(self):
+        
         ## Кнопка СТАРТ
         self.btnStart = QPushButton("Начать игру", self)
         self.btnStart.setGeometry(140, 250, 200, 100)
@@ -56,7 +60,7 @@ class Example(QMainWindow):
         self.btnRestart.setFont(font)
 
         ##Кнопка Хватит
-        self.btnStop = QPushButton("Хватит", self)
+        self.btnStop = QPushButton("Завершить", self)
         self.btnStop.setGeometry(140, 370, 200, 100)
         self.btnStop.clicked.connect(self.buttonClicked_Stop)
 
@@ -80,7 +84,7 @@ class Example(QMainWindow):
         self.Score.setWhatsThis("")
         self.Score.setTextFormat(QtCore.Qt.RichText)
         self.Score.setAlignment(QtCore.Qt.AlignCenter)
-        self.Score.setStyleSheet("background-color: rgb(85, 255, 255);")
+        self.Score.setStyleSheet("border-style: solid; border-width: 1px; border-color: black; ")
         self.Score.setObjectName("Score")
         self.Score.hide()
 
@@ -105,7 +109,7 @@ class Example(QMainWindow):
         self.Score2.setWhatsThis("")
         self.Score2.setTextFormat(QtCore.Qt.RichText)
         self.Score2.setAlignment(QtCore.Qt.AlignCenter)
-        self.Score2.setStyleSheet("background-color: rgb(85, 255, 255);")
+        self.Score2.setStyleSheet("border-style: solid; border-width: 1px; border-color: black; ")
         self.Score2.setObjectName("Score2")
         self.Score2.hide()
 
@@ -170,7 +174,7 @@ class Example(QMainWindow):
         self.Cards1.setWhatsThis("")
         self.Cards1.setTextFormat(QtCore.Qt.RichText)
         self.Cards1.setAlignment(QtCore.Qt.AlignCenter)
-        self.Cards1.setStyleSheet("background-color: rgb(85, 255, 255);")
+        self.Cards1.setStyleSheet("border-style: solid; border-width: 1px; border-color: black; ")
         self.Cards1.setObjectName("Cards1")
         self.Cards1.hide()
 
@@ -197,7 +201,7 @@ class Example(QMainWindow):
         self.Cards2.setWhatsThis("")
         self.Cards2.setTextFormat(QtCore.Qt.RichText)
         self.Cards2.setAlignment(QtCore.Qt.AlignCenter)
-        self.Cards2.setStyleSheet("background-color: rgb(85, 255, 255);")
+        self.Cards2.setStyleSheet("border-style: solid; border-width: 1px; border-color: black; ")
         self.Cards2.setObjectName("Cards2")
         self.Cards2.hide()
 
@@ -210,11 +214,64 @@ class Example(QMainWindow):
         self.lcards_2.setText(
             "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt; font-weight:600;\">Число карт</span></p></body></html>")
         self.lcards_2.hide()
+
+        #Группы
+        font = QtGui.QFont()
+        font.setFamily("Times New Roman")
+        font.setPointSize(20)
+        font.setBold(True)
+
+        self.groupBox = QtWidgets.QGroupBox(self)
+        self.groupBox.setGeometry(QtCore.QRect(10, 10, 461, 111))
+        self.groupBox.setObjectName("groupBox")
+        self.groupBox.hide()
+
+        self.label_4 = QtWidgets.QLabel(self.groupBox)
+        self.label_4.setGeometry(QtCore.QRect(20, 12, 81, 51))
+        self.label_4.setObjectName("LWins")
+        self.label_4.setText("Побед")
+        self.label_4.setFont(font)
+
+        self.label_5 = QtWidgets.QLabel(self.groupBox)
+        self.label_5.setGeometry(QtCore.QRect(150, 12, 101, 51))
+        self.label_5.setObjectName("label_5")
+        self.label_5.setText("Ничьих")
+        self.label_5.setFont(font)
+
+        self.label_6 = QtWidgets.QLabel(self.groupBox)
+        self.label_6.setGeometry(QtCore.QRect(300, 12, 151, 51))
+        self.label_6.setObjectName("label_6")
+        self.label_6.setText("Поражений")
+        self.label_6.setFont(font)
+
+        self.label_7 = QtWidgets.QLabel(self.groupBox)
+        self.label_7.setGeometry(QtCore.QRect(50, 60, 71, 51))
+        self.label_7.setObjectName("label_7")
+        self.label_7.setText("0")
+        self.label_7.setStyleSheet("color : green;")
+        self.label_7.setFont(font)
+
+        self.label_8 = QtWidgets.QLabel(self.groupBox)
+        self.label_8.setGeometry(QtCore.QRect(195, 60, 71, 51))
+        self.label_8.setObjectName("label_8")
+        self.label_8.setStyleSheet("color : blue;")
+        self.label_8.setText("0")
+        self.label_8.setFont(font)
+
+        self.label_9 = QtWidgets.QLabel(self.groupBox)
+        self.label_9.setGeometry(QtCore.QRect(360, 60, 71, 51))
+        self.label_9.setObjectName("label_9")
+        self.label_9.setStyleSheet("color : red;")
+        self.label_9.setText("0")
+        self.label_9.setFont(font)
+
         ##Основные свойства
         self.statusBar()
-        self.resize(480, 640)
+        self.setFixedSize(480, 640)
         self.setWindowTitle('21')
+        self.setWindowIcon(QtGui.QIcon('icon.ico'))
         self.show()
+        
 
     def buttonClicked_Restart(self):
         self.Restart()
@@ -222,7 +279,6 @@ class Example(QMainWindow):
     ##События кнопок
     def buttonClicked(self):
         sender = self.sender()
-        # self.statusBar().showMessage(sender.text() + ' was pressed')
         self.btnStart.hide()
         self.Visible()  # показываем скрытое
 
@@ -236,6 +292,7 @@ class Example(QMainWindow):
         self.Score2.show()  # очки противника
         self.btnStop.show()  # кнопка стоп
         self.btnRestart.show()
+        self.groupBox.show()
         self.Cards2.show()
         self.lcards_2.show()
 
@@ -244,6 +301,8 @@ class Example(QMainWindow):
             return
         card = self.koloda.pop()
         current = card[0]
+        #Вывод информации о картах с фигурами
+        #или вывод числа
         if current < 6 or current == 11:
             text = "<html><center>"
             text += self.tbCards.toPlainText()
@@ -278,7 +337,7 @@ class Example(QMainWindow):
         temp = str.replace("♥", "<span style=\"color:#ff0000;\" >♥</span>")
         temp = temp.replace("♦", "<span style=\"color:#ff0000;\" >♦</span>")
         return temp
-		
+
     def buttonClicked_Stop(self):
         if self.count1 == 0 or self.loose == True:
             return
@@ -305,6 +364,8 @@ class Example(QMainWindow):
 
     # Перезапуск игры
     def Restart(self):
+        self.Score.setStyleSheet("color : black; border-style: solid; border-width: 1px; border-color: black; ")
+        self.Score2.setStyleSheet("color : black; border-style: solid; border-width: 1px; border-color: black; ")
         self.Score2.setText("")
         self.Score.setText("")
         self.tbCards.setText("")
@@ -335,9 +396,9 @@ class Example(QMainWindow):
                 self.count2 += current
             elif self.count2 > 18 and self.count2 <= 20:
                 r = random.random()
-                if r > 0.65:
+                if r > 0.90:
                     card = self.koloda.pop()
-					current = card[0]
+                    current = card[0]
                     self.numc2 += 1
                     self.count2 += current
                 S = False
@@ -354,27 +415,45 @@ class Example(QMainWindow):
     def Result(self, Status):
         self.loose = True
         if Status == "win":
+            self.Score.setStyleSheet("color : green; border-style: solid; border-width: 1px; border-color: black; ")
+            self.Score2.setStyleSheet("color : red; border-style: solid; border-width: 1px; border-color: black; ")
             reply = QMessageBox.question(self, 'Сообщение',
                                          "Вы победили. Еще раз?", QMessageBox.Yes |
                                          QMessageBox.No, QMessageBox.No)
+
+            self.wins+=1
+            self.Stats()
             if reply == QMessageBox.Yes:
                 self.Restart()
             return
         elif Status == "lose":
+            self.Score.setStyleSheet("color : red; border-style: solid; border-width: 1px; border-color: black; ")
+            self.Score2.setStyleSheet("color : green; border-style: solid; border-width: 1px; border-color: black; ")
             reply = QMessageBox.question(self, 'Сообщение',
                                          "Вы проиграли. Еще раз?", QMessageBox.Yes |
                                          QMessageBox.No, QMessageBox.No)
+            self.loses+=1
+            self.Stats()
             if reply == QMessageBox.Yes:
                 self.Restart()
             return
         elif Status == "draw":
+            self.Score.setStyleSheet("color : blue; border-style: solid; border-width: 1px; border-color: black; ")
+            self.Score2.setStyleSheet("color : blue; border-style: solid; border-width: 1px; border-color: black; ")
             reply = QMessageBox.question(self, 'Сообщение',
                                          "Ничья. Еще раз?", QMessageBox.Yes |
                                          QMessageBox.No, QMessageBox.No)
+
+            self.draws+=1
+            self.Stats()
             if reply == QMessageBox.Yes:
                 self.Restart()
             return
-
+    #Вывод статистика
+    def Stats(self):
+        self.label_7.setText(str(self.wins))
+        self.label_8.setText(str(self.draws))
+        self.label_9.setText(str(self.loses))
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
